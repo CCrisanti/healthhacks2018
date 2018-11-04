@@ -1,0 +1,41 @@
+#Prepare for scaling
+diamonds_num = diamonds.drop("cut", axis=1)
+diamonds_num = diamonds_num.drop("color", axis=1)
+diamonds_num = diamonds_num.drop("clarity", axis=1)
+print("\n Data set without categorical values \n")
+print(diamonds_num.head())
+
+
+
+#Pipeline for scaling
+
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
+num_pipeline = Pipeline([
+        ('std_scaler', StandardScaler()) ])
+
+diamonds_num_tr = num_pipeline.fit_transform(diamonds_num)
+
+print("\n Scaled numerical data set \n")
+print(diamonds_num_tr)
+
+
+
+
+from future_encoders import ColumnTransformer
+from future_encoders import OneHotEncoder
+
+num_attribs = list(diamonds_num)
+cat_attribs = ["cut", "color", "clarity"] 
+
+full_pipeline = ColumnTransformer([
+    ("num", num_pipeline, num_attribs),
+    ("cat", OneHotEncoder(), cat_attribs)
+])
+
+diamonds_prepared = full_pipeline.fit_transform(diamonds)
+
+
+x_train = full_pipeline.transform(x_train)
+x_test = full_ppipeline.transform(x_test)
